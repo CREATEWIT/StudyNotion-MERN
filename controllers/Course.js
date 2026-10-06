@@ -91,13 +91,10 @@ exports.createCourse = async(req,res) =>{
     }
 }
 
-
-
-
 //GetAllCourse Handler
 exports.showAllCourses = async(req,res) =>{
     try{
-        const AllCourse = await Course.find({},{
+        const allCourse = await Course.find({},{
             courseName : true,
             price : true,
             thumbnail : true,
