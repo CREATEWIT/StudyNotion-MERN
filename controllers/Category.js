@@ -1,7 +1,7 @@
 const Tag = require("../models/tags");
 
 //Create Tag Handler Function
-exports.createTags = async(req,res) =>{
+exports.createCategory = async(req,res) =>{
     try{
         //fetch Data From user
         const {name,description} = req.body;
@@ -15,7 +15,7 @@ exports.createTags = async(req,res) =>{
         }
 
         //Create Entry In DB
-        const  tagDetails = Tag.create({
+        const  categoryDetails = Category.create({
             name : name,
             description : description,
         });
@@ -24,7 +24,7 @@ exports.createTags = async(req,res) =>{
         //return response
         return res.status(200).json({
             success:true,
-            message : "Tag Is Created Successfully",
+            message : "Category Is Created Successfully",
         });
 
 
@@ -40,11 +40,11 @@ exports.createTags = async(req,res) =>{
 
 
 // Create getAllTags handler Function
-exports.showAllTags = async(req,res) =>{
+exports.showAllCategory = async(req,res) =>{
     try{
         //getAll Tags from DB
-        const allTags = await Tag.find({},{name : true, description : true});
-        console.log(getAllTags);
+        const allCategory = await Tag.find({},{name : true, description : true});
+        console.log(allCategory);
 
         //return res
         return res.status(200).json({
