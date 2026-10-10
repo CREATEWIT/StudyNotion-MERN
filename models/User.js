@@ -48,7 +48,7 @@ const userSchema = new mongoose.Schema({
         {
             type : mongoose.Schema.Types.ObjectId,
             required : true,
-            ref : SubSection,
+            ref : "SubSection",
         }
     ],
 });

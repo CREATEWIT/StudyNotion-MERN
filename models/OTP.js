@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const  mailSender  = require("../utils/mailSender");
 
 const OTPSchema = new mongoose.Schema({
     email : {
@@ -12,13 +13,13 @@ const OTPSchema = new mongoose.Schema({
 
     createdAt : {
         type : Date,
-        default :Date.now(),
+        default :Date.now,
         expires : 5*60,
     }
 });
 
 
-async function sendVerification(email,otp){
+async function sendVerificationEmail(email,otp){
     try{
         const mailResponse =await mailSender(email, "Verification Email from LearnMeet",otp);
         console.log("Email sent SuccessFully",mailResponse);
@@ -29,9 +30,8 @@ async function sendVerification(email,otp){
     }
 }
 
-OTPSchema.pre("save",async function(next){
+OTPSchema.pre("save",async function(){
     await sendVerificationEmail(this.email,this.otp);
-    next();
 })
 
 module.exports = mongoose.model("OTP",OTPSchema);

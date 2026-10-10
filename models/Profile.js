@@ -1,9 +1,8 @@
 const mongoose = require("mongoose");
 
-exports.profileSchema = new mongoose.Schema({
+const profileSchema = new mongoose.Schema({
     gender : {
         type : String,
-        required : true,
     },
     dateOfBirth : {
         type : String,

@@ -37,7 +37,7 @@ const CourseSchema = new mongoose.Schema({
         required : true,
     },
     tag :{
-        type : String,
+        type : [String],
         required :true,
     },
     category : {

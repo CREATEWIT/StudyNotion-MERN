@@ -46,7 +46,7 @@ exports.updateProfile = async(req,res)=>{
 
     //Delete Profile
 
-    exports.deleteHandler = async(req,res) =>{
+    exports.deleteProfile = async(req,res) =>{
         try{
             //get id
             const id = req.user.id;
@@ -84,13 +84,14 @@ exports.updateProfile = async(req,res)=>{
 
 
 //getAllUserData
-exports.getUserAllData = async(req,res) =>{
+exports.getAllUserProfile = async(req,res) =>{
     try{
         //get id
         const id = req.user.id;
 
         //validation and get user details
         const userDetails = await User.findById(id).populate("additionalDetails").exec();
+        console.log(userDetails);
 
         //return response
         return res.status(200).json({

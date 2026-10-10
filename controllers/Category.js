@@ -1,4 +1,4 @@
-const Tag = require("../models/tags");
+const Category = require("../models/Category");
 
 //Create Tag Handler Function
 exports.createCategory = async(req,res) =>{
@@ -39,7 +39,7 @@ exports.createCategory = async(req,res) =>{
 }
 
 
-// Create getAllTags handler Function
+// Create getAllCategory handler Function
 exports.showAllCategory = async(req,res) =>{
     try{
         //getAll Tags from DB
@@ -60,3 +60,96 @@ exports.showAllCategory = async(req,res) =>{
         });
     }
 }
+
+// CategoryPageDetails Handler
+exports.categoryPageDetails = async (req, res) => {
+try {
+    // Get Category ID
+    const { categoryId } = req.body;
+
+    // Get courses for the specified category
+    const selectedCategory = await Category.findById(categoryId).populate("courses").exec();
+
+    // Validate category
+    if (!selectedCategory) {
+        return res.status(404).json({
+        success: false,
+        message: "Data Not Found",
+        });
+    }
+
+    // Get courses from different categories
+    const differentCategory = await Category.find({
+        _id: { $ne: categoryId },
+        }).populate("courses").exec();
+
+    // TODO: Calculate top-selling category
+    const topEnrolledCategory = await Course.aggregate([
+    {
+        $project: {
+            category: 1,
+            enrollmentCount: {
+                $size: {
+                    $ifNull: ["$studentEnrolled", []]
+                }
+            }
+        }
+    },
+    {
+        $group: {
+            _id: "$category",
+            totalEnrollments: {
+                $sum: "$enrollmentCount"
+            }
+        }
+    },
+    {
+        $match: {
+            totalEnrollments: { $gt: 0 }
+        }
+    },
+    {
+        $sort: {
+            totalEnrollments: -1
+        }
+    },
+    {
+        $limit: 1
+    },
+    {
+        $lookup: {
+            from: "categories",
+            localField: "_id",
+            foreignField: "_id",
+            as: "categoryDetails"
+        }
+    },
+    {
+        $unwind: "$categoryDetails"
+    },
+    {
+        $project: {
+            _id: 0,
+            categoryDetails: 1,
+            totalEnrollments: 1
+        }
+    }
+]);
+
+
+    return res.status(200).json({
+    success: true,
+    data: {
+        selectedCategory,
+        differentCategory,
+        topEnrolledCategory: topEnrolledCategory[0] || null
+    }
+});} catch (error) {
+    console.error("Error in categoryPageDetails:", error);
+
+    return res.status(500).json({
+        success: false,
+        message: "Internal Server Error",
+        });
+    }
+};
