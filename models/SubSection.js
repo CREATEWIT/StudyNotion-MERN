@@ -16,4 +16,4 @@ const Sub_SectionSchema = new mongoose.Schema({
 
 }) 
 
-module.exports = mongoose.model("Sub_Section",Sub_SectionSchema)
+module.exports = mongoose.model("SubSection",Sub_SectionSchema)

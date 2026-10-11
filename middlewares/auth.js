@@ -1,44 +1,55 @@
-const JWT = require("jsonwebtoken") ;
+
 const User = require("../models/User")
-require("dotenv").config();
 const cookieParser = require("cookie-parser");
+const JWT = require("jsonwebtoken");
+require("dotenv").config();
 
+// Authentication middleware
+exports.auth = async (req, res, next) => {
+    try {
+        // Extract token safely
+        const authHeader = req.headers.authorization;
 
-//auth
-exports.auth = async(req,res,next)=>{
-    try{
-        //extract token from user 
-        const token = req.cookies.token || req.body.token || req.header("Authorization").replace("Bearer ","");
+        let token = req.cookies?.token || req.body?.token;
 
-        //if token missing,then return response
-        if(!token){
+        if (!token && authHeader?.startsWith("Bearer ")) {
+            token = authHeader.split(" ")[1];
+        }
+
+        if (!token) {
             return res.status(401).json({
-                success : false,
-                message : "invalid or expired token",
+                success: false,
+                message: "Authentication token missing",
             });
         }
 
-        //Verify Token
-        try{
-            const decode = JWT.verify(token,process.env.JWT_SECRETE);
-            console.log(token);
-            req.user = decode
+        // Verify token
+        const decoded = JWT.verify(
+            token,
+            process.env.JWT_SECRETE
+        );
 
-        } catch(error){
+        // Attach decoded payload to request
+        req.user = decoded;
+
+        if (!req.user.id) {
             return res.status(401).json({
-                success : false,
-                message :  "token is valid"
-            })
+                success: false,
+                message: "Token does not contain a user ID",
+            });
         }
-        next();
-        
-    } catch(error){
+
+        return next();
+    } catch (error) {
+        console.error("Authentication error:", error.message);
+
         return res.status(401).json({
-            success : false,
-            message : "Something Went Wrong for validating the token",
+            success: false,
+            message: "Invalid or expired token",
         });
     }
-}
+};
+
 
 //isStudent
 exports.isStudent = async(req,res,next) =>{

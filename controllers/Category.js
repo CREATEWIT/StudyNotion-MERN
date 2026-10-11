@@ -15,16 +15,17 @@ exports.createCategory = async(req,res) =>{
         }
 
         //Create Entry In DB
-        const  categoryDetails = Category.create({
+        const  categoryDetails = await Category.create({
             name : name,
             description : description,
         });
-        console.log(tagDetails);
+        console.log(categoryDetails);
 
         //return response
         return res.status(200).json({
             success:true,
             message : "Category Is Created Successfully",
+            categoryDetails,
         });
 
 
@@ -43,14 +44,14 @@ exports.createCategory = async(req,res) =>{
 exports.showAllCategory = async(req,res) =>{
     try{
         //getAll Tags from DB
-        const allCategory = await Tag.find({},{name : true, description : true});
+        const allCategory = await Category.find({},{name : true, description : true});
         console.log(allCategory);
 
         //return res
         return res.status(200).json({
             success:true,
             message : "All Tags Fetch Successfully",
-            allTags,
+            allCategory,
         });
 
     } catch(error){
