@@ -13,10 +13,17 @@ exports.createSubSection = async(req,res) =>{
             });
         }
         //extract file & Video
-        const video = req.files.fileVideo;
+        const video = req.files?.fileVideo;
+
+if (!video) {
+    return res.status(400).json({
+        success: false,
+        message: "Please upload a video using the fileVideo field",
+    });
+}
 
         //upload video to cloudinary
-        const uploadDetails = await uploadImageToCloudinary(video,process.env.FOLDER_NAME);
+        const uploadDetails = await uploadImageToCloudinary(video,process.env.FOLDER_NAME, "video");
 
         //create a sub_section
         const SubSectionDetails = await SubSection.create({
@@ -57,7 +64,7 @@ exports.createSubSection = async(req,res) =>{
     }catch(error){
         return res.status(500).json({
             success : false,
-            message : "something wen wrong for creating subSection, please try again later",
+            message : "something went wrong for creating subSection, please try again later",
             error: error.message,
         });
 
