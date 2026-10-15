@@ -1,5 +1,11 @@
+@"
 node_modules/
+**/node_modules/
 .env
-.env.local
-
-temp/
+**/.env
+.env.*
+**/.env.*
+!.env.example
+**/temp/
+**/dist/
+"@ | Set-Content .gitignore
