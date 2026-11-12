@@ -1,50 +1,52 @@
 const express = require("express");
 const router = express.Router();
-const { auth ,} = require("../middlewares/auth");
+const { auth } = require("../middlewares/auth");
 
-const {sendOTP, signUp, Login, changePassword } = require("../controllers/Auth");
-const {createCourse, showAllCourses, getCourseDetails} = require("../controllers/Course");
-const {createSection, updateSection, deleteSection} = require("../controllers/Section");
-const {createSubSection, updateSubSection, deleteSubSection} = require("../controllers/SubSection");
-const {updateDisplayPicture, updateProfile, deleteProfile, getAllUserProfile } = require("../controllers/Profile");
-const {resetPasswordToken, resetPassword }  = require("../controllers/ResetPassword");
-const {creteRating, getAverageRating, getAllRatingAndReview} = require("../controllers/RatingAndReview");
-const {capturePayments, verifySignature } = require("../controllers/Payments");
-const {createCategory,  showAllCategory, categoryPageDetails} = require("../controllers/Category");
+const { sendOTP, signUp, Login, changePassword } = require("../controllers/Auth");
+const { createCourse, showAllCourses, getCourseDetails } = require("../controllers/Course");
+const { createSection, updateSection, deleteSection } = require("../controllers/Section");
+const { createSubSection, updateSubSection, deleteSubSection } = require("../controllers/SubSection");
+const { updateDisplayPicture, updateProfile, deleteProfile, getAllUserProfile } = require("../controllers/Profile");
+const { resetPasswordToken, resetPassword } = require("../controllers/ResetPassword");
+const { creteRating, getAverageRating, getAllRatingAndReview } = require("../controllers/RatingAndReview");
+const { capturePayments, verifySignature } = require("../controllers/Payments");
+const { createCategory, showAllCategory, categoryPageDetails } = require("../controllers/Category");
 
+// ==================== AUTH ROUTES ====================
+router.post("/auth/sendotp", sendOTP);
+router.post("/auth/signup", signUp);
+router.post("/auth/login", Login);
+router.post("/auth/changepassword", auth, changePassword);
+router.post("/auth/reset-password-token", resetPasswordToken);
+router.post("/auth/reset-password", resetPassword);
 
-router.post("/SendOTP", sendOTP);
-router.post("/Home/SignUp", signUp);
-router.post("/Home/Login", Login);
-router.post("/Courses/CreateCourse",auth, createCourse);
-router.get("/Courses/ShowAllCourses", showAllCourses);
-router.get("/Courses/GetCourseDetails", getCourseDetails);
-router.post("/Section/CreateSection", createSection);
-router.put("/Section/UpdateSection", updateSection);
-router.delete("/Section/DeleteSection", deleteSection);
-router.post("/SubSection/CreateSubSection", createSubSection);
-router.put("/SubSection/UpdateSubSection", updateSubSection);
-router.delete("/SubSection/DeleteSubSection", deleteSubSection);
-router.put("/Profile/UpdateDisplayPicture",auth, updateDisplayPicture);
-router.put("/Profile/UpdateProfile", auth, updateProfile);
-router.delete("/Profile/DeleteProfile",auth, deleteProfile);
-router.get("/Profile/GetAllUserProfile",auth, getAllUserProfile);
-router.post("/Password/ResetPasswordToken", resetPasswordToken);
-router.post("/Password/ResetPassword", resetPassword );
-router.post("/Password/ChangePassword", changePassword);
-router.post("/Rating/CreateRating", creteRating);
-router.get("/Rating/GetAverageRating", getAverageRating);
-router.get("/Rating/GetAllRatingAndReview", getAllRatingAndReview);
-router.post("/Payments/CapturePayments", capturePayments);
-router.post("/Payments/VerifySignature", verifySignature);
-router.post("/Category/CreateCategory", createCategory);
-router.get("/Category/ShowAllCategory", showAllCategory);
-router.get("/Category/CategoryPageDetails", categoryPageDetails);
+// ==================== PROFILE ROUTES ====================
+router.put("/profile/updateDisplayPicture", auth, updateDisplayPicture);
+router.put("/profile/updateProfile", auth, updateProfile);
+router.delete("/profile/deleteProfile", auth, deleteProfile);
+router.get("/profile/getUserDetails", auth, getAllUserProfile);
 
+// ==================== COURSE & CATEGORY ROUTES ====================
+router.post("/course/createCourse", auth, createCourse);
+router.get("/course/getAllCourses", showAllCourses);
+router.get("/course/getCourseDetails", getCourseDetails);
+router.post("/course/addSection", auth, createSection);
+router.put("/course/updateSection", auth, updateSection);
+router.delete("/course/deleteSection", auth, deleteSection);
+router.post("/course/addSubSection", auth, createSubSection);
+router.put("/course/updateSubSection", auth, updateSubSection);
+router.delete("/course/deleteSubSection", auth, deleteSubSection);
+router.post("/course/createCategory", auth, createCategory);
+router.get("/course/showAllCategories", showAllCategory);
+router.get("/course/getCategoryPageDetails", categoryPageDetails);
 
+// ==================== RATING & REVIEW ROUTES ====================
+router.post("/course/createRating", auth, creteRating);
+router.get("/course/getAverageRating", getAverageRating);
+router.get("/course/getReviews", getAllRatingAndReview);
 
-
-
-
+// ==================== PAYMENT ROUTES ====================
+router.post("/payment/capturePayment", auth, capturePayments);
+router.post("/payment/verifyPayment", auth, verifySignature);
 
 module.exports = router;

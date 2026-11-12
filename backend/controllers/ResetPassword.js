@@ -1,7 +1,6 @@
-
 const crypto = require("crypto");
 const User = require("../models/User");
-const mailSender  = require("../utils/mailSender");
+const mailSender = require("../utils/mailSender");
 const bcrypt = require("bcrypt");
 
 // Request Password Reset
@@ -36,8 +35,8 @@ exports.resetPasswordToken = async (req, res) => {
 
         await user.save();
 
-        const url =
-            `http://localhost:3000/update-password/${token}`;
+        const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+        const url = `${frontendUrl}/update-password/${token}`;
 
         await mailSender(
             user.email,
